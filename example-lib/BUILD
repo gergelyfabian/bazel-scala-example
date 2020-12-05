@@ -8,4 +8,5 @@ scala_test(
     name = "test",
     srcs = glob(["src/test/scala/**/*.scala"]),
     deps = ["example-lib"],
+    jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
 )

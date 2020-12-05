@@ -17,6 +17,7 @@ alias(
 default_java_toolchain(
     name = "java8_toolchain",
     bootclasspath = ["@bazel_tools//tools/jdk:platformclasspath"],
+    jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
     jvm_opts = JDK8_JVM_OPTS,
     source_version = "8",
     target_version = "8",

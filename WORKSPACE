@@ -14,16 +14,16 @@ http_archive(
     url = "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib-{}.tar.gz".format(skylib_version, skylib_version),
 )
 
-rules_scala_version = "67a7ac178a73d1d5ff4c2b0663a8eda6dfcbbc56"  # update this as needed
+rules_scala_version = "bf4f0312d46b825173f2d7791b481ecbf9cf9c42"  # update this as needed
 
-RULES_SCALA_SHA = "95054009fd938ac7ef53a20619f94a5408d8ae74eb5b318cd150a3ecb1a6086f"
+RULES_SCALA_SHA = "6398b3c2e9f9c35dbcfa2a317412980c546bc133cb5cb560622ec86002686d9d"
 
 http_archive(
     name = "io_bazel_rules_scala",
     sha256 = RULES_SCALA_SHA,
     strip_prefix = "rules_scala-%s" % rules_scala_version,
     type = "zip",
-    url = "https://github.com/bazelbuild/rules_scala/archive/%s.zip" % rules_scala_version,
+    url = "https://github.com/gergelyfabian/rules_scala/archive/%s.zip" % rules_scala_version,
 )
 
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
