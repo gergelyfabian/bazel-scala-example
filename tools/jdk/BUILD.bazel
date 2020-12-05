@@ -5,6 +5,7 @@ load("@io_bazel_rules_scala//scala:providers.bzl", "declare_deps_provider")
 default_java_toolchain(
     name = "java17_toolchain",
     configuration = DEFAULT_TOOLCHAIN_CONFIGURATION,
+    jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
     java_runtime = "@bazel_tools//tools/jdk:remotejdk_17",
     javacopts = DEFAULT_JAVACOPTS,
     # jvm_opts needs to stay this one also for Java 11, it seems to be common for Java 9+ versions.
@@ -24,6 +25,7 @@ scala_toolchain(
         ":my_scala_xml_provider",
         ":my_parser_combinators_provider",
     ],
+    jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
     scalacopts = ["-Ywarn-unused"],
     unused_dependency_checker_mode = "off",
     visibility = ["//visibility:public"],
