@@ -8,6 +8,8 @@ class TestSuite extends AnyFlatSpec {
   }
 
   "call lambda test" should "work" in {
-    assert(Foo.testLambdas == List(10))
+    assert(Foo.testLambdas(1) == List(10))
+    assert(Foo.testLambdas(11) == List(30))
+    Foo.main(List("").toArray)
   }
 }

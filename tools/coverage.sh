@@ -29,6 +29,6 @@ bazel coverage -k --jobs=${COVERAGE_CPUS:-2} \
 
 mkdir -p ${destdir}/
 
-genhtml -o ${destdir} --ignore-errors source bazel-out/_coverage/_coverage_report.dat
+genhtml -o ${destdir} --branch-coverage --ignore-errors source bazel-out/_coverage/_coverage_report.dat
 
 echo "coverage report at file://${destdir}/index.html"
