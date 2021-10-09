@@ -1,6 +1,9 @@
 scala_library(
     name = "example-maven",
     srcs = glob(["src/main/scala/**/*.scala"]),
+    scalacopts = [
+        "-Ylog-classpath",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_twitter_algebird_core_2_12",

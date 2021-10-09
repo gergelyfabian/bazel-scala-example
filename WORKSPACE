@@ -38,13 +38,30 @@ load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
 
 scala_config()
 
+load("//tools:scala.bzl", "scala_jars")
+
+scala_jars(
+    artifacts = {
+        "scala_library": {
+            "artifact": "org.scala-lang:scala-library:2.12.14",
+            "sha256": "0451dce8322903a6c2aa7d31232b54daa72a61ced8ade0b4c5022442a3f6cb57",
+        },
+        "scala_compiler": {
+            "artifact": "org.scala-lang:scala-compiler:2.12.14",
+            "sha256": "2a1b3fbf9c956073c8c5374098a6f987e3b8d76e34756ab985fc7d2ca37ee113",
+        },
+        "scala_reflect": {
+            "artifact": "org.scala-lang:scala-reflect:2.12.14",
+            "sha256": "497f4603e9d19dc4fa591cd467de5e32238d240bbd955d3dac6390b270889522",
+        },
+    },
+)
+
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
 
 scala_repositories()
 
-load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
-
-scala_register_toolchains()
+register_toolchains("//tools/jdk:my_scala_toolchain")
 
 # optional: setup ScalaTest toolchain and dependencies
 load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "scalatest_toolchain")
