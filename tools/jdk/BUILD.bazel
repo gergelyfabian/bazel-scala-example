@@ -51,9 +51,9 @@ declare_deps_provider(
     deps_id = "scala_compile_classpath",
     visibility = ["//visibility:public"],
     deps = [
-        "@scala_compiler",
-        "@scala_library",
-        "@scala_reflect",
+        "@maven//:org_scala_lang_scala_compiler",
+        "@maven//:org_scala_lang_scala_library",
+        "@maven//:org_scala_lang_scala_reflect",
     ],
 )
 
@@ -61,8 +61,8 @@ declare_deps_provider(
     name = "my_scala_library_classpath_provider",
     deps_id = "scala_library_classpath",
     deps = [
-        "@scala_library",
-        "@scala_reflect",
+        "@maven//:org_scala_lang_scala_library",
+        "@maven//:org_scala_lang_scala_reflect",
     ],
 )
 
@@ -70,8 +70,8 @@ declare_deps_provider(
     name = "my_scala_macro_classpath_provider",
     deps_id = "scala_macro_classpath",
     deps = [
-        "@scala_library",
-        "@scala_reflect",
+        "@maven//:org_scala_lang_scala_library",
+        "@maven//:org_scala_lang_scala_reflect",
     ],
 )
 
