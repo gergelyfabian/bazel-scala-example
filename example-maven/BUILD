@@ -18,6 +18,11 @@ scala_library(
         "@maven//:org_typelevel_macro_compat_%s" % SCALA_VERSION,
         "@maven//:org_scala_lang_scala_library",
     ],
+    scalac_jvm_flags = [
+        "-Xms512m",
+        "-Xmx512m",
+        "-Xss2m",
+    ],
 )
 
 scala_test(
