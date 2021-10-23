@@ -93,6 +93,7 @@ maven_install(
         "junit:junit:4.12",
         "org.scalatest:scalatest_2.12:3.0.5",
         "com.twitter:algebird-core_2.12:0.13.7",
+        "com.github.pureconfig:pureconfig_2.12:0.14.0",
     ],
     # Some useful options that you may want to try:
     fetch_sources = True,
