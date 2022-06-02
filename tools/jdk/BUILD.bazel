@@ -5,6 +5,7 @@ load("@io_bazel_rules_scala//scala:providers.bzl", "declare_deps_provider")
 default_java_toolchain(
     name = "java11_toolchain",
     configuration = DEFAULT_TOOLCHAIN_CONFIGURATION,
+    #jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
     javacopts = DEFAULT_JAVACOPTS,
     jvm_opts = JDK9_JVM_OPTS,
     source_version = "11",
@@ -21,6 +22,7 @@ scala_toolchain(
         ":my_scala_xml_provider",
         ":my_parser_combinators_provider",
     ],
+    #jacocorunner = "//tools:jacoco_coverage_runner_filegroup",
     scalacopts = ["-Ywarn-unused"],
     unused_dependency_checker_mode = "off",
     visibility = ["//visibility:public"],
