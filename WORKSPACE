@@ -63,6 +63,7 @@ load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
 
 scala_config(scala_version = scala_version)
 
+
 load("@io_bazel_rules_scala//scala:scala.bzl", "rules_scala_setup", "rules_scala_toolchain_deps_repositories")
 
 # Loads other rules Rules Scala depends on.
@@ -156,4 +157,4 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
 
-register_toolchains("//tools/jdk:java17_toolchain_definition")
+register_toolchains("//tools/jdk:java21_toolchain_definition")
