@@ -41,9 +41,9 @@ python_register_toolchains(
 # Version was taken from rules_jvm_external/repositories.bzl (for Bazel 7).
 http_archive(
     name = "rules_java",
-    sha256 = "3121a00588b1581bd7c1f9b550599629e5adcc11ba9c65f482bbd5cfe47fdf30",
+    integrity = "sha256-TaN2H2hVrZFlaOK/6GITum0mN/Vrg2BTin+2Elq/ZRg=",
     urls = [
-        "https://github.com/bazelbuild/rules_java/releases/download/7.3.2/rules_java-7.3.2.tar.gz",
+        "https://github.com/bazelbuild/rules_java/releases/download/7.5.0/rules_java-7.5.0.tar.gz",
     ],
 )
 
