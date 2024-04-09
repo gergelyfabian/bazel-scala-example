@@ -16,11 +16,13 @@ http_archive(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+RULES_PYTHON_VERSION = "0.28.0"
+
 http_archive(
     name = "rules_python",
-    sha256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036",
-    strip_prefix = "rules_python-0.25.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.25.0/rules_python-0.25.0.tar.gz",
+    integrity = "sha256-1wzXKnpIgPAACmNGJTQUglwZzdQKKCib32e45kgO3/g=",
+    strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
+    url = "https://github.com/bazelbuild/rules_python/releases/download/%s/rules_python-%s.tar.gz" % (RULES_PYTHON_VERSION, RULES_PYTHON_VERSION),
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
@@ -28,19 +30,32 @@ load("@rules_python//python:repositories.bzl", "py_repositories", "python_regist
 py_repositories()
 
 python_register_toolchains(
-    name = "python3_8",
+    name = "python3_11",
     # Available versions are listed in @rules_python//python:versions.bzl.
     # We recommend using the same version your team is already standardized on.
-    python_version = "3.8",
+    python_version = "3.11",
 )
 
-RULES_SCALA_VERSION = "6.4.0"
+# Add explicit rules_java version to avoid conflict between rules_jvm_external and rules_scala.
+# See more at https://github.com/bazelbuild/rules_jvm_external/issues/1047.
+# Version was taken from rules_jvm_external/repositories.bzl (for Bazel 7).
+http_archive(
+    name = "rules_java",
+    sha256 = "3121a00588b1581bd7c1f9b550599629e5adcc11ba9c65f482bbd5cfe47fdf30",
+    urls = [
+        "https://github.com/bazelbuild/rules_java/releases/download/7.3.2/rules_java-7.3.2.tar.gz",
+    ],
+)
+
+# Using top of master (2024-04-08)
+RULES_SCALA_VERSION = "800cd820a693275e918222c69be10d6238db6bdb"
 
 http_archive(
     name = "io_bazel_rules_scala",
-    integrity = "sha256-miMFijYYOlVqm6cim08gTT5oyMbreygmBSEBazjvTgA=",
+    integrity = "sha256-J2Ew+Wp9w1m8ZQVbEf1N7+WZhl5589Vcue7AepRZSfE=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
-    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    url = "https://github.com/bazelbuild/rules_scala/archive/%s.tar.gz" % RULES_SCALA_VERSION,
 )
 
 load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
