@@ -1,7 +1,7 @@
-load("@bazel_tools//tools/jdk:default_java_toolchain.bzl", "BASE_JDK9_JVM_OPTS", "DEFAULT_JAVACOPTS", "DEFAULT_TOOLCHAIN_CONFIGURATION", "default_java_toolchain")
-load("@io_bazel_rules_scala//scala:scala_toolchain.bzl", "scala_toolchain")
 load("@io_bazel_rules_scala//scala:providers.bzl", "declare_deps_provider")
+load("@io_bazel_rules_scala//scala:scala_toolchain.bzl", "scala_toolchain")
 load("@io_bazel_rules_scala//scala/scalafmt/toolchain:toolchain.bzl", "export_scalafmt_deps", "scalafmt_toolchain")
+load("@rules_java//toolchains:default_java_toolchain.bzl", "BASE_JDK9_JVM_OPTS", "DEFAULT_JAVACOPTS", "DEFAULT_TOOLCHAIN_CONFIGURATION", "default_java_toolchain")
 load("//tools:scala_version.bzl", "scala_binary_suffix")
 
 default_java_toolchain(

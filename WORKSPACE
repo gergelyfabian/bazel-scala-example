@@ -14,13 +14,11 @@ http_archive(
     ],
 )
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-RULES_PYTHON_VERSION = "0.28.0"
+RULES_PYTHON_VERSION = "0.36.0"
 
 http_archive(
     name = "rules_python",
-    integrity = "sha256-1wzXKnpIgPAACmNGJTQUglwZzdQKKCib32e45kgO3/g=",
+    sha256 = "ca77768989a7f311186a29747e3e95c936a41dffac779aff6b443db22290d913",
     strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
     url = "https://github.com/bazelbuild/rules_python/releases/download/%s/rules_python-%s.tar.gz" % (RULES_PYTHON_VERSION, RULES_PYTHON_VERSION),
 )
@@ -30,39 +28,53 @@ load("@rules_python//python:repositories.bzl", "py_repositories", "python_regist
 py_repositories()
 
 python_register_toolchains(
-    name = "python3_11",
+    name = "python3_12",
     # Available versions are listed in @rules_python//python:versions.bzl.
     # We recommend using the same version your team is already standardized on.
-    python_version = "3.11",
+    python_version = "3.12",
+    register_coverage_tool = True,
 )
 
 # Add explicit rules_java version to avoid conflict between rules_jvm_external and rules_scala.
 # See more at https://github.com/bazelbuild/rules_jvm_external/issues/1047.
-# Version was taken from rules_jvm_external/repositories.bzl (for Bazel 7).
 http_archive(
     name = "rules_java",
-    integrity = "sha256-TaN2H2hVrZFlaOK/6GITum0mN/Vrg2BTin+2Elq/ZRg=",
+    sha256 = "6f3ce0e9fba979a844faba2d60467843fbf5191d8ca61fa3d2ea17655b56bb8c",
     urls = [
-        "https://github.com/bazelbuild/rules_java/releases/download/7.5.0/rules_java-7.5.0.tar.gz",
+        "https://github.com/bazelbuild/rules_java/releases/download/7.11.1/rules_java-7.11.1.tar.gz",
     ],
 )
 
-# Using top of master (2024-04-08)
-RULES_SCALA_VERSION = "800cd820a693275e918222c69be10d6238db6bdb"
+load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
+
+rules_java_dependencies()
+
+rules_java_toolchains()
+
+# Add explicit rules_license version to avoid conflict between rules_jvm_external and rules_pkg.
+# See more at https://github.com/bazel-contrib/rules_jvm_external/issues/1244.
+http_archive(
+    name = "rules_license",
+    sha256 = "26d4021f6898e23b82ef953078389dd49ac2b5618ac564ade4ef87cced147b38",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/1.0.0/rules_license-1.0.0.tar.gz",
+        "https://github.com/bazelbuild/rules_license/releases/download/1.0.0/rules_license-1.0.0.tar.gz",
+    ],
+)
+
+RULES_SCALA_VERSION = "6.6.0"
 
 http_archive(
     name = "io_bazel_rules_scala",
-    integrity = "sha256-J2Ew+Wp9w1m8ZQVbEf1N7+WZhl5589Vcue7AepRZSfE=",
+    integrity = "sha256-5zTu+VzybAFxVmvcJNg72Cva+Mp4c77GzpsNUkva8F0=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
-    #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
-    url = "https://github.com/bazelbuild/rules_scala/archive/%s.tar.gz" % RULES_SCALA_VERSION,
+    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
 )
 
-load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
+load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
 
 scala_config(scala_version = scala_version)
-
 
 load("@io_bazel_rules_scala//scala:scala.bzl", "rules_scala_setup", "rules_scala_toolchain_deps_repositories")
 
@@ -108,30 +120,44 @@ http_archive(
     ],
 )
 
-rules_pkg_version = "0.9.1"
+rules_pkg_version = "1.0.1"
 
 http_archive(
     name = "rules_pkg",
-    sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
+    sha256 = "d20c951960ed77cb7b341c2a59488534e494d5ad1d30c4818c736d57772a9fef",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/%s/rules_pkg-%s.tar.gz" % (rules_pkg_version, rules_pkg_version),
         "https://github.com/bazelbuild/rules_pkg/releases/download/%s/rules_pkg-%s.tar.gz" % (rules_pkg_version, rules_pkg_version),
     ],
 )
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
-# Using master temporarily.
-RULES_JVM_EXTERNAL_VERSION = "6.0"
+rules_pkg_dependencies()
+
+RULES_JVM_EXTERNAL_TAG = "6.3"
+
+RULES_JVM_EXTERNAL_SHA = "c18a69d784bcd851be95897ca0eca0b57dc86bb02e62402f15736df44160eb02"
 
 http_archive(
     name = "rules_jvm_external",
-    integrity = "sha256-hf1rrVisdsw6J8jgUeQlX/nM2MkrqHlnDRlWIufAqbc=",
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_VERSION,
-    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_VERSION, RULES_JVM_EXTERNAL_VERSION),
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
+load("@rules_jvm_external//:specs.bzl", "maven")
+
+rules_jvm_external_deps()
+
+load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
+
+rules_jvm_external_setup()
+
+load("@rules_jvm_external_deps//:defs.bzl", rules_jvm_external_deps_pinned_maven_install = "pinned_maven_install")
+
+rules_jvm_external_deps_pinned_maven_install()
 
 maven_install(
     artifacts = [
