@@ -9,6 +9,7 @@ build --tool_java_runtime_version=21
 
 # Do not use bzlmod just yet.
 common --noenable_bzlmod
+common --enable_workspace
 
 # Disable build without the bytes. Causes issues with Scalafmt.
 # https://github.com/bazelbuild/rules_scala/issues/1525
