@@ -14,20 +14,33 @@ http_archive(
     ],
 )
 
+http_archive(
+    name = "rules_cc",
+    sha256 = "d9bdd3ec66b6871456ec9c965809f43a0901e692d754885e89293807762d3d80",
+    strip_prefix = "rules_cc-0.0.13",
+    urls = ["https://github.com/bazelbuild/rules_cc/releases/download/0.0.13/rules_cc-0.0.13.tar.gz"],
+)
+
 # Add explicit rules_java version to avoid conflict between rules_jvm_external and rules_scala.
 # See more at https://github.com/bazelbuild/rules_jvm_external/issues/1047.
 http_archive(
     name = "rules_java",
-    sha256 = "a9690bc00c538246880d5c83c233e4deb83fe885f54c21bb445eb8116a180b83",
     urls = [
-        "https://github.com/bazelbuild/rules_java/releases/download/7.12.2/rules_java-7.12.2.tar.gz",
+        "https://github.com/bazelbuild/rules_java/releases/download/8.5.0/rules_java-8.5.0.tar.gz",
     ],
+    sha256 = "5c215757b9a6c3dd5312a3cdc4896cef3f0c5b31db31baa8da0d988685d42ae4",
 )
 
-load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
-
+load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
 rules_java_dependencies()
 
+# note that the following line is what is minimally required from protobuf for the java rules to work
+# consider using the protobuf_deps() public API from @protobuf//:protobuf_deps.bzl
+load("@com_google_protobuf//bazel/private:proto_bazel_features.bzl", "proto_bazel_features")  # buildifier: disable=bzl-visibility
+proto_bazel_features(name = "proto_bazel_features")
+
+# register toolchains
+load("@rules_java//java:repositories.bzl", "rules_java_toolchains")
 rules_java_toolchains()
 
 # Add explicit rules_license version to avoid conflict between rules_jvm_external and rules_pkg.
