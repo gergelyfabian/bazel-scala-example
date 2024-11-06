@@ -18,6 +18,6 @@ public class TestHello {
 
     @Test
     public void testNoArgument() throws Exception {
-        assertEquals("hello world", "hello world");
+        assertEquals(14, 7 + (5*2 - 3));
     }
 }
