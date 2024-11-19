@@ -962,5 +962,42 @@
       "org.typelevel:paiges-core_2.13:jar:sources"
     ]
   },
+  "services": {
+    "org.jline:jline": {
+      "org/": [],
+      "org/jline/": [],
+      "org/jline/terminal/": [],
+      "org/jline/terminal/provider/": [],
+      "org/jline/terminal/provider/exec": [
+        "class=org.jline.terminal.impl.exec.ExecTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jansi": [
+        "class=org.jline.terminal.impl.jansi.JansiTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jna": [
+        "class=org.jline.terminal.impl.jna.JnaTerminalProvider"
+      ]
+    },
+    "org.jline:jline:jar:sources": {
+      "org/": [],
+      "org/jline/": [],
+      "org/jline/terminal/": [],
+      "org/jline/terminal/provider/": [],
+      "org/jline/terminal/provider/exec": [
+        "class=org.jline.terminal.impl.exec.ExecTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jansi": [
+        "class=org.jline.terminal.impl.jansi.JansiTerminalProvider"
+      ],
+      "org/jline/terminal/provider/jna": [
+        "class=org.jline.terminal.impl.jna.JnaTerminalProvider"
+      ]
+    },
+    "org.scala-lang:scala-compiler": {
+      "javax.script.ScriptEngineFactory": [
+        "scala.tools.nsc.interpreter.shell.Scripted$Factory"
+      ]
+    }
+  },
   "version": "2"
 }
