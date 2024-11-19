@@ -14,27 +14,6 @@ http_archive(
     ],
 )
 
-RULES_PYTHON_VERSION = "0.36.0"
-
-http_archive(
-    name = "rules_python",
-    sha256 = "ca77768989a7f311186a29747e3e95c936a41dffac779aff6b443db22290d913",
-    strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
-    url = "https://github.com/bazelbuild/rules_python/releases/download/%s/rules_python-%s.tar.gz" % (RULES_PYTHON_VERSION, RULES_PYTHON_VERSION),
-)
-
-load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
-
-py_repositories()
-
-python_register_toolchains(
-    name = "python3_12",
-    # Available versions are listed in @rules_python//python:versions.bzl.
-    # We recommend using the same version your team is already standardized on.
-    python_version = "3.12",
-    register_coverage_tool = True,
-)
-
 # Add explicit rules_java version to avoid conflict between rules_jvm_external and rules_scala.
 # See more at https://github.com/bazelbuild/rules_jvm_external/issues/1047.
 http_archive(
@@ -107,6 +86,25 @@ http_archive(
     sha256 = protobuf_version_sha256,
     strip_prefix = "protobuf-%s" % protobuf_version,
     url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % protobuf_version,
+)
+
+http_archive(
+    name = "rules_python",
+    sha256 = "c6fb25d0ba0246f6d5bd820dd0b2e66b339ccc510242fd4956b9a639b548d113",
+    strip_prefix = "rules_python-0.37.2",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.37.2/rules_python-0.37.2.tar.gz",
+)
+
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+
+py_repositories()
+
+python_register_toolchains(
+    name = "python3_12",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = "3.12",
+    register_coverage_tool = True,
 )
 
 http_archive(
