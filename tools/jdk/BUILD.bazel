@@ -85,9 +85,14 @@ declare_deps_provider(
     deps_id = "scalafmt_classpath",
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:com_geirsson_metaconfig_core_%s" % scala_binary_suffix,
-        "@maven//:org_scalameta_parsers_%s" % scala_binary_suffix,
-        "@maven//:org_scalameta_scalafmt_core_%s" % scala_binary_suffix,
+        "@maven//:%s_%s" % (dep, scala_binary_suffix)
+        for dep in [
+            "com_geirsson_metaconfig_core",
+            "org_scalameta_parsers",
+            "org_scalameta_scalafmt_core",
+            "org_scalameta_scalafmt_sysops",
+            "org_scalameta_trees",
+        ]
     ],
 )
 

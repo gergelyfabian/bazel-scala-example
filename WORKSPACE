@@ -41,13 +41,14 @@ http_archive(
     ],
 )
 
-RULES_SCALA_VERSION = "6.6.0"
+RULES_SCALA_VERSION = "a8ae50ef8c6f9b4bf551e9d6ccf0b796dd07539d"
 
 http_archive(
     name = "io_bazel_rules_scala",
-    integrity = "sha256-5zTu+VzybAFxVmvcJNg72Cva+Mp4c77GzpsNUkva8F0=",
+    integrity = "sha256-s+6dL4C28BwS1TSKOe6LgL/rN+wmqzAfVxlSU+tejVE=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
-    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    url = "https://github.com/bazelbuild/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
 )
 
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
@@ -55,21 +56,14 @@ load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version",
 
 scala_config(scala_version = scala_version)
 
-load("@io_bazel_rules_scala//scala:scala.bzl", "rules_scala_setup", "rules_scala_toolchain_deps_repositories")
+load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_toolchains")
 
-# Loads other rules Rules Scala depends on.
-rules_scala_setup()
-
-rules_scala_toolchain_deps_repositories()
+scala_toolchains(
+    fetch_sources = True,
+    testing = True,
+)
 
 register_toolchains("//tools/jdk:my_scala_toolchain")
-
-# optional: setup ScalaTest toolchain and dependencies
-load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "scalatest_toolchain")
-
-scalatest_repositories()
-
-scalatest_toolchain()
 
 load("@io_bazel_rules_scala//scala/scalafmt:scalafmt_repositories.bzl", "scalafmt_default_config", "scalafmt_repositories")
 
@@ -165,7 +159,7 @@ maven_install(
         "org.scala-lang:scala-library:jar:%s" % scala_version,
         "org.scala-lang:scala-reflect:jar:%s" % scala_version,
         "org.scala-lang:scala-compiler:jar:%s" % scala_version,
-        "org.scalameta:scalafmt-core_%s:3.0.0" % scala_binary_version,
+        "org.scalameta:scalafmt-core_%s:3.8.3" % scala_binary_version,
     ],
     # Some useful options that you may want to try:
     fetch_sources = True,
@@ -181,4 +175,7 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
 
-register_toolchains("//tools/jdk:java21_toolchain_definition")
+register_toolchains(
+    "//tools/jdk:java21_toolchain_definition",
+    "@io_bazel_rules_scala_toolchains//...:all",
+)
