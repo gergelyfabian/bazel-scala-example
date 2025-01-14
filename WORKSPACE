@@ -41,7 +41,7 @@ http_archive(
     ],
 )
 
-RULES_SCALA_VERSION = "190fbee676632eb67be34b5ee91613391fc8e633"
+RULES_SCALA_VERSION = "6e36591103889e6cce6e2f71266544b313aeeaab"
 
 http_archive(
     name = "io_bazel_rules_scala",
