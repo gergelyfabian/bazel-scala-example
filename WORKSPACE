@@ -41,13 +41,14 @@ http_archive(
     ],
 )
 
-RULES_SCALA_VERSION = "6.6.0"
+RULES_SCALA_VERSION = "190fbee676632eb67be34b5ee91613391fc8e633"
 
 http_archive(
     name = "io_bazel_rules_scala",
-    integrity = "sha256-5zTu+VzybAFxVmvcJNg72Cva+Mp4c77GzpsNUkva8F0=",
+    #integrity = "sha256-SKK6zg+DchyPWe3efuM6p2ly926IzL+IFz4w2oDC6Is=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
-    url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    url = "https://github.com/bazelbuild/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
 )
 
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
@@ -165,7 +166,7 @@ maven_install(
         "org.scala-lang:scala-library:jar:%s" % scala_version,
         "org.scala-lang:scala-reflect:jar:%s" % scala_version,
         "org.scala-lang:scala-compiler:jar:%s" % scala_version,
-        "org.scalameta:scalafmt-core_%s:3.0.0" % scala_binary_version,
+        "org.scalameta:scalafmt-core_%s:3.8.3" % scala_binary_version,
     ],
     # Some useful options that you may want to try:
     fetch_sources = True,
