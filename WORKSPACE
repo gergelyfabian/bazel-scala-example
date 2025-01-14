@@ -132,9 +132,9 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-RULES_JVM_EXTERNAL_TAG = "6.5"
+RULES_JVM_EXTERNAL_TAG = "6.6"
 
-RULES_JVM_EXTERNAL_SHA = "3a4d56357851cf5b0dae538b3f3e0612a4f58925dfb3cadb2e0c4e87d51e629e"
+RULES_JVM_EXTERNAL_SHA = "3afe5195069bd379373528899c03a3072f568d33bd96fe037bd43b1f590535e7"
 
 http_archive(
     name = "rules_jvm_external",
