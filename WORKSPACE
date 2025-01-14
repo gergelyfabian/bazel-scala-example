@@ -165,7 +165,7 @@ maven_install(
         "org.scala-lang:scala-library:jar:%s" % scala_version,
         "org.scala-lang:scala-reflect:jar:%s" % scala_version,
         "org.scala-lang:scala-compiler:jar:%s" % scala_version,
-        "org.scalameta:scalafmt-core_%s:2.4.2" % scala_binary_version,
+        "org.scalameta:scalafmt-core_%s:3.0.0" % scala_binary_version,
     ],
     # Some useful options that you may want to try:
     fetch_sources = True,
