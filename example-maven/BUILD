@@ -1,4 +1,4 @@
-SCALA_VERSION = "2_13"
+load("//tools:scala_version.bzl", "scala_binary_suffix")
 
 scala_library(
     name = "example-maven",
@@ -6,9 +6,9 @@ scala_library(
     format = True,
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:com_twitter_algebird_core_%s" % SCALA_VERSION,
-        "@maven//:org_typelevel_algebra_%s" % SCALA_VERSION,
-        "@maven//:org_typelevel_cats_kernel_%s" % SCALA_VERSION,
+        "@maven//:com_twitter_algebird_core_%s" % scala_binary_suffix,
+        "@maven//:org_typelevel_algebra_%s" % scala_binary_suffix,
+        "@maven//:org_typelevel_cats_kernel_%s" % scala_binary_suffix,
     ],
 )
 
