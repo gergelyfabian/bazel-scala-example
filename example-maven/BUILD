@@ -3,12 +3,12 @@ load("//tools:scala_version.bzl", "scala_binary_suffix")
 scala_library(
     name = "example-maven",
     srcs = glob(["src/main/scala/**/*.scala"]),
-    format = True,
-    visibility = ["//visibility:public"],
+    scalacopts = [
+        "-opt-inline-from:**",
+    ],
     deps = [
-        "@maven//:com_twitter_algebird_core_%s" % scala_binary_suffix,
-        "@maven//:org_typelevel_algebra_%s" % scala_binary_suffix,
-        "@maven//:org_typelevel_cats_kernel_%s" % scala_binary_suffix,
+        #"@maven//:com_google_protobuf_protobuf_java",
+        "@com_google_protobuf//:protobuf_java",
     ],
 )
 

@@ -2,15 +2,11 @@ workspace(name = "scala_example")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-protobuf_version = "3.21.10"
-
-protobuf_version_sha256 = "90de7e780db97e0ee8cfabc3aecc0da56c3d443824b968ec0c7c600f9585b9ba"
-
 http_archive(
     name = "com_google_protobuf",
-    sha256 = protobuf_version_sha256,
-    strip_prefix = "protobuf-%s" % protobuf_version,
-    url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % protobuf_version,
+    sha256 = "75be42bd736f4df6d702a0e4e4d30de9ee40eac024c4b845d17ae4cc831fe4ae",
+    strip_prefix = "protobuf-21.7",
+    url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v21.7.tar.gz",
 )
 
 # Add explicit rules_license version to avoid conflict between rules_jvm_external and rules_pkg.
@@ -161,6 +157,7 @@ maven_install(
         "org.scala-lang:scala-reflect:jar:%s" % scala_version,
         "org.scala-lang:scala-compiler:jar:%s" % scala_version,
         "org.scalameta:scalafmt-core_%s:3.8.3" % scala_binary_version,
+        "com.google.protobuf:protobuf-java:3.25.5",
     ],
     # Some useful options that you may want to try:
     fetch_sources = True,

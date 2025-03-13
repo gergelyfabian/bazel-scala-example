@@ -1,7 +1,10 @@
 package mypackage
 
-import com.twitter.algebird.Semigroup
+import com.google.protobuf.CodedOutputStream
 
 object Maven {
-  val message = Semigroup.plus("hello ", "world")
+  def repro(): Unit = {
+    val result = new Array[Byte](0)
+    CodedOutputStream.newInstance(result)
+  }
 }
