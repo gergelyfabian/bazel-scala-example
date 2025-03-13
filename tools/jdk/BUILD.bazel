@@ -6,13 +6,13 @@ load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_version")
 default_java_toolchain(
     name = "java21_toolchain",
     configuration = DEFAULT_TOOLCHAIN_CONFIGURATION,
-    java_runtime = "@rules_java//toolchains:remotejdk_21",
+    java_runtime = "@rules_java//toolchains:remotejdk_8",
     javacopts = DEFAULT_JAVACOPTS,
     # jvm_opts needs to stay this one also for Java 11, it seems to be common for Java 9+ versions.
     # It includes e.g. Java module system options.
     jvm_opts = BASE_JDK9_JVM_OPTS,
-    source_version = "21",
-    target_version = "21",
+    source_version = "8",
+    target_version = "8",
     visibility = ["//visibility:public"],
 )
 
