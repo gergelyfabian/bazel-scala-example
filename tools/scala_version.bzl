@@ -1,6 +1,6 @@
 scala_binary_version = "2.13"
 
-scala_version = "%s.15" % scala_binary_version
+scala_version = "%s.16" % scala_binary_version
 
 scala_binary_suffix = scala_binary_version.replace(".", "_")
 

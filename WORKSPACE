@@ -2,16 +2,15 @@ workspace(name = "scala_example")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-skylib_version = "1.3.0"
+protobuf_version = "3.21.10"
+
+protobuf_version_sha256 = "90de7e780db97e0ee8cfabc3aecc0da56c3d443824b968ec0c7c600f9585b9ba"
 
 http_archive(
-    name = "bazel_skylib",
-    sha256 = "74d544d96f4a5bb630d465ca8bbcfe231e3594e5aae57e1edbf17a6eb3ca2506",
-    type = "tar.gz",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib-{}.tar.gz".format(skylib_version, skylib_version),
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib-{}.tar.gz".format(skylib_version, skylib_version),
-    ],
+    name = "com_google_protobuf",
+    sha256 = protobuf_version_sha256,
+    strip_prefix = "protobuf-%s" % protobuf_version,
+    url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % protobuf_version,
 )
 
 # Add explicit rules_license version to avoid conflict between rules_jvm_external and rules_pkg.
@@ -25,57 +24,94 @@ http_archive(
     ],
 )
 
-RULES_SCALA_VERSION = "a8ae50ef8c6f9b4bf551e9d6ccf0b796dd07539d"
+# Import rules_jvm_external before rules_scala (to ensure rules_scala's dependencies don't override e.g. rules_jvm_external).
+
+RULES_JVM_EXTERNAL_TAG = "6.7"
+
+RULES_JVM_EXTERNAL_SHA = "a1e351607f04fed296ba33c4977d3fe2a615ed50df7896676b67aac993c53c18"
 
 http_archive(
-    name = "io_bazel_rules_scala",
-    integrity = "sha256-s+6dL4C28BwS1TSKOe6LgL/rN+wmqzAfVxlSU+tejVE=",
+    name = "rules_jvm_external",
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazel-contrib/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
+)
+
+load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
+
+rules_jvm_external_deps()
+
+load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
+
+rules_jvm_external_setup()
+
+register_toolchains(
+    "//tools/jdk:java21_toolchain_definition",
+)
+
+#RULES_SCALA_VERSION = "6.6.0"
+RULES_SCALA_VERSION = "eadc090c2ce556c27b47cfb6cfe38788cbbafa2e"
+
+http_archive(
+    name = "rules_scala",
+    integrity = "sha256-z26H5ETdBg1YPa88dtdIN2aySURykuZLzGsAHWnfdr8=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
     #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
     url = "https://github.com/bazelbuild/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
 )
 
-load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
-load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
+load("@rules_scala//scala:deps.bzl", "rules_scala_dependencies")
 
-scala_config(scala_version = scala_version)
+rules_scala_dependencies()
 
-load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_toolchains")
-
-scala_toolchains(
-    fetch_sources = True,
-    testing = True,
+# In `rules_scala` 7.x, `scala/deps.bzl` imports `rules_java` 7.x. This
+# statement will change for `rules_scala` 8.x, which will use `rules_java` 8.x.
+load(
+    "@rules_java//java:repositories.bzl",
+    "rules_java_dependencies",
+    "rules_java_toolchains",
 )
 
-register_toolchains("//tools/jdk:my_scala_toolchain")
+rules_java_dependencies()
 
-load("@io_bazel_rules_scala//scala/scalafmt:scalafmt_repositories.bzl", "scalafmt_default_config", "scalafmt_repositories")
+rules_java_toolchains()
 
-scalafmt_default_config()
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
-register_toolchains("//tools/jdk:scalafmt_toolchain")
-
-protobuf_version = "3.21.10"
-
-protobuf_version_sha256 = "90de7e780db97e0ee8cfabc3aecc0da56c3d443824b968ec0c7c600f9585b9ba"
-
-http_archive(
-    name = "com_google_protobuf",
-    sha256 = protobuf_version_sha256,
-    strip_prefix = "protobuf-%s" % protobuf_version,
-    url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % protobuf_version,
-)
+bazel_skylib_workspace()
 
 http_archive(
     name = "rules_python",
-    sha256 = "c6fb25d0ba0246f6d5bd820dd0b2e66b339ccc510242fd4956b9a639b548d113",
-    strip_prefix = "rules_python-0.37.2",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.37.2/rules_python-0.37.2.tar.gz",
+    sha256 = "ca2671529884e3ecb5b79d6a5608c7373a82078c3553b1fa53206e6b9dddab34",
+    strip_prefix = "rules_python-0.38.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.38.0/rules_python-0.38.0.tar.gz",
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
 
 py_repositories()
+
+load("@rules_scala//:scala_config.bzl", "scala_config")
+load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
+
+scala_config(scala_version = scala_version)
+
+load("@rules_scala//scala:toolchains.bzl", "scala_register_toolchains", "scala_toolchains")
+
+scala_toolchains(
+    fetch_sources = True,
+    jmh = True,
+    junit = True,
+    scalafmt = True,
+    scalatest = True,
+    specs2 = True,
+)
+
+scala_register_toolchains()
+
+register_toolchains("//tools/jdk:my_scala_toolchain")
+
+register_toolchains("//tools/jdk:scalafmt_toolchain")
 
 python_register_toolchains(
     name = "python3_12",
@@ -110,25 +146,6 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-RULES_JVM_EXTERNAL_TAG = "6.6"
-
-RULES_JVM_EXTERNAL_SHA = "3afe5195069bd379373528899c03a3072f568d33bd96fe037bd43b1f590535e7"
-
-http_archive(
-    name = "rules_jvm_external",
-    sha256 = RULES_JVM_EXTERNAL_SHA,
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    url = "https://github.com/bazel-contrib/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
-)
-
-load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
-
-rules_jvm_external_deps()
-
-load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
-
-rules_jvm_external_setup()
-
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 load("@rules_jvm_external_deps//:defs.bzl", rules_jvm_external_deps_pinned_maven_install = "pinned_maven_install")
@@ -158,8 +175,3 @@ maven_install(
 load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
-
-register_toolchains(
-    "//tools/jdk:java21_toolchain_definition",
-    "@io_bazel_rules_scala_toolchains//...:all",
-)
