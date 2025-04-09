@@ -1,3 +1,5 @@
+load("@rules_jvm_external//:defs.bzl", "java_export")
+
 scala_library(
     name = "example-lib",
     srcs = glob(["src/main/scala/**/*.scala"]),
@@ -17,9 +19,18 @@ java_library(
 
 java_test(
     name = "java_test",
-    test_class = "mypackage.TestHello",
     srcs = [
         "src/test/java/mypackage/TestHello.java",
     ],
+    test_class = "mypackage.TestHello",
     deps = ["hello-world"],
+)
+
+java_export(
+    name = "hello-world-exported",
+    srcs = ["src/main/java/mypackage/Greeter.java"],
+    maven_coordinates = "com.mypackage:greeter:0.0.1",
+    deps = [
+        ":example-lib",
+    ],
 )
