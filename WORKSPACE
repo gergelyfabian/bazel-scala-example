@@ -2,16 +2,38 @@ workspace(name = "scala_example")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-protobuf_version = "3.21.10"
-
-protobuf_version_sha256 = "90de7e780db97e0ee8cfabc3aecc0da56c3d443824b968ec0c7c600f9585b9ba"
+protobuf_version = "30.1"
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = protobuf_version_sha256,
+    repo_mapping = {"@com_google_absl": "@abseil-cpp"},
+    sha256 = "1451b03faec83aed17cdc71671d1bbdfd72e54086b827f5f6fd02bf7a4041b68",
     strip_prefix = "protobuf-%s" % protobuf_version,
-    url = "https://github.com/protocolbuffers/protobuf/archive/v%s.tar.gz" % protobuf_version,
+    url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v%s.tar.gz" % protobuf_version,
 )
+
+http_archive(
+    name = "rules_java",
+    sha256 = "d31b6c69e479ffa45460b64dc9c7792a431cac721ef8d5219fc9f603fa2ff877",
+    urls = [
+        "https://github.com/bazelbuild/rules_java/releases/download/8.11.0/rules_java-8.11.0.tar.gz",
+    ],
+)
+
+load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
+
+rules_java_dependencies()
+
+# Note that `rules_java` 8.x suggests loading `protobuf_deps()` after
+# `rules_java_dependencies` and before `rules_java_toolchains()`:
+# - https://github.com/bazelbuild/rules_java/releases/tag/8.9.0
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+load("@rules_shell//shell:repositories.bzl", "rules_shell_toolchains")
+
+rules_shell_toolchains()
 
 # Add explicit rules_license version to avoid conflict between rules_jvm_external and rules_pkg.
 # See more at https://github.com/bazel-contrib/rules_jvm_external/issues/1244.
@@ -50,11 +72,11 @@ register_toolchains(
 )
 
 #RULES_SCALA_VERSION = "6.6.0"
-RULES_SCALA_VERSION = "eadc090c2ce556c27b47cfb6cfe38788cbbafa2e"
+RULES_SCALA_VERSION = "38391c13fef4e32c0347b6be6702a7ab690784f5"
 
 http_archive(
     name = "rules_scala",
-    integrity = "sha256-z26H5ETdBg1YPa88dtdIN2aySURykuZLzGsAHWnfdr8=",
+    integrity = "sha256-UJ4JRZiUQEDtRLQJITU2CPgmQjKZ/v0AQX4ACKBL0xA=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
     #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
     url = "https://github.com/bazelbuild/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
@@ -64,32 +86,24 @@ load("@rules_scala//scala:deps.bzl", "rules_scala_dependencies")
 
 rules_scala_dependencies()
 
-# In `rules_scala` 7.x, `scala/deps.bzl` imports `rules_java` 7.x. This
-# statement will change for `rules_scala` 8.x, which will use `rules_java` 8.x.
-load(
-    "@rules_java//java:repositories.bzl",
-    "rules_java_dependencies",
-    "rules_java_toolchains",
-)
-
-rules_java_dependencies()
-
-rules_java_toolchains()
-
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
 http_archive(
     name = "rules_python",
-    sha256 = "ca2671529884e3ecb5b79d6a5608c7373a82078c3553b1fa53206e6b9dddab34",
-    strip_prefix = "rules_python-0.38.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.38.0/rules_python-0.38.0.tar.gz",
+    sha256 = "2ef40fdcd797e07f0b6abda446d1d84e2d9570d234fddf8fcd2aa262da852d1c",
+    strip_prefix = "rules_python-1.2.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/1.2.0/rules_python-1.2.0.tar.gz",
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
 
 py_repositories()
+
+load("@rules_java//java:repositories.bzl", "rules_java_toolchains")
+
+rules_java_toolchains()
 
 load("@rules_scala//:scala_config.bzl", "scala_config")
 load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_binary_version", "scala_version")
@@ -132,13 +146,11 @@ http_archive(
     ],
 )
 
-rules_pkg_version = "1.0.1"
-
 http_archive(
     name = "rules_pkg",
-    sha256 = "d20c951960ed77cb7b341c2a59488534e494d5ad1d30c4818c736d57772a9fef",
+    sha256 = "b7215c636f22c1849f1c3142c72f4b954bb12bb8dcf3cbe229ae6e69cc6479db",
     urls = [
-        "https://github.com/bazelbuild/rules_pkg/releases/download/%s/rules_pkg-%s.tar.gz" % (rules_pkg_version, rules_pkg_version),
+        "https://github.com/bazelbuild/rules_pkg/releases/download/1.1.0/rules_pkg-1.1.0.tar.gz",
     ],
 )
 
