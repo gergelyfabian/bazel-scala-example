@@ -72,14 +72,14 @@ register_toolchains(
 )
 
 #RULES_SCALA_VERSION = "6.6.0"
-RULES_SCALA_VERSION = "84e3f449011cc2aca7f518ddd8dc7f25a46f8515"
+RULES_SCALA_VERSION = "3010cfaa06194833d1eccdf053d23c872e742338"
 
 http_archive(
     name = "rules_scala",
-    integrity = "sha256-gSI7xKWPLmwvRLUyBGPi6GyT06jz16SUifbbVQdRgbI=",
+    integrity = "sha256-3K7T5pE9X05TmK617aAc4uWH6zVrmwnTNMeCkpXG9eQ=",
     strip_prefix = "rules_scala-%s" % RULES_SCALA_VERSION,
-    #url = "https://github.com/bazelbuild/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
-    url = "https://github.com/bazelbuild/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
+    #url = "https://github.com/bazel-contrib/rules_scala/releases/download/v%s/rules_scala-v%s.tar.gz" % (RULES_SCALA_VERSION, RULES_SCALA_VERSION),
+    url = "https://github.com/bazel-contrib/rules_scala/archive/{}.zip".format(RULES_SCALA_VERSION),
 )
 
 # Note: We are dependent on latest versions of rules_scala dependencies (e.g. rules_proto).
@@ -94,9 +94,9 @@ bazel_skylib_workspace()
 
 http_archive(
     name = "rules_python",
-    sha256 = "2cc26bbd53854ceb76dd42a834b1002cd4ba7f8df35440cf03482e045affc244",
-    strip_prefix = "rules_python-1.3.0",
-    url = "https://github.com/bazel-contrib/rules_python/releases/download/1.3.0/rules_python-1.3.0.tar.gz",
+    sha256 = "a837679f1382f26968c1ee6f839c7daf9079aa53128069a1f2815decaa637304",
+    strip_prefix = "rules_python-1.4.0",
+    url = "https://github.com/bazel-contrib/rules_python/releases/download/1.4.0/rules_python-1.4.0.tar.gz",
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
@@ -118,7 +118,7 @@ scala_toolchains(
     fetch_sources = True,
     jmh = True,
     junit = True,
-    scalafmt = True,
+    scalafmt = {"default_config": "//:.scalafmt.conf"},
     scalatest = True,
     specs2 = True,
 )
