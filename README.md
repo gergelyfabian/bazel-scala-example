@@ -36,5 +36,5 @@ See the rules_jvm_external README for info on how to use the dependencies.
 You may want to regenerate the maven-install.json after changing depedencies with:
 
 ```bash
-bazel run @unpinned_maven//:pin
+REPIN=1 bazel run @maven//:pin
 ```

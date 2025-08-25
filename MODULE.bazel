@@ -1,0 +1,81 @@
+module(
+    name = "scala_example",
+    # Note: the version is not yet used anywhere (this is not yet a bzlmod dependency for anyone).
+    version = "0.0.0.version.placeholder",
+)
+
+bazel_dep(name = "rules_jvm_external", version = "6.8")
+bazel_dep(name = "rules_java", version = "8.12.0")
+bazel_dep(name = "rules_scala", version = "7.0.0")
+bazel_dep(name = "rules_python", version = "1.4.1")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "protobuf", version = "31.1")
+
+scala_binary_version = "2.13"
+
+scala_version = "%s.16" % scala_binary_version
+
+scala_binary_suffix = scala_binary_version.replace(".", "_")
+
+scala_version_suffix = scala_version.replace(".", "_")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "junit:junit:4.12",
+        "org.scalatest:scalatest_%s:3.2.11" % scala_binary_version,
+        "com.twitter:algebird-core_%s:0.13.7" % scala_binary_version,
+        "org.scala-lang:scala-library:%s@jar" % scala_version,
+        "org.scala-lang:scala-reflect:%s@jar" % scala_version,
+        "org.scala-lang:scala-compiler:%s@jar" % scala_version,
+        "org.scala-lang:scalap:%s" % scala_version,
+        "org.scala-lang.modules:scala-parser-combinators_%s:1.1.2" % scala_binary_version,
+        "org.scala-lang.modules:scala-xml_%s:2.3.0" % scala_binary_version,
+        "org.scalameta:scalafmt-core_%s:3.9.6" % scala_binary_version,
+    ],
+    fetch_sources = True,
+    ignore_empty_files = True,
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://jcenter.bintray.com/",
+        "https://repo.maven.apache.org/maven2",
+    ],
+    resolve_timeout = 1200,
+    version_conflict_policy = "pinned",
+)
+use_repo(maven, "maven")
+
+scala_deps = use_extension(
+    "@rules_scala//scala/extensions:deps.bzl",
+    "scala_deps",
+)
+scala_deps.scalafmt(default_config = "//:.scalafmt.conf")
+scala_deps.jmh()
+
+scala_config = use_extension(
+    "@rules_scala//scala/extensions:config.bzl",
+    "scala_config",
+)
+scala_config.settings(scala_version = scala_version)
+use_repo(scala_config, "rules_scala_config")
+
+register_toolchains("//tools/jdk:java21_toolchain_definition")
+
+register_toolchains("//tools/jdk:my_scala_toolchain")
+
+register_toolchains("//tools/jdk:scalafmt_toolchain")
+
+register_toolchains("//tools/jdk:testing_toolchain")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    is_default = True,
+    python_version = "3.12",
+)
+use_repo(
+    python,
+    "python_3_12",
+    "python_3_12_host",
+)

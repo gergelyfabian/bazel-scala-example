@@ -1,6 +1,7 @@
 load("@rules_java//toolchains:default_java_toolchain.bzl", "BASE_JDK9_JVM_OPTS", "DEFAULT_JAVACOPTS", "DEFAULT_TOOLCHAIN_CONFIGURATION", "default_java_toolchain")
 load("@rules_scala//scala:scala.bzl", "setup_scala_toolchain")
 load("@rules_scala//scala/scalafmt/toolchain:setup_scalafmt_toolchain.bzl", "setup_scalafmt_toolchain")
+load("@rules_scala//testing:testing.bzl", "setup_scala_testing_toolchain")
 load("//tools:scala_version.bzl", "scala_binary_suffix", "scala_version")
 
 default_java_toolchain(
@@ -18,6 +19,9 @@ default_java_toolchain(
 
 setup_scala_toolchain(
     name = "my_scala_toolchain",
+    parser_combinators_deps = [
+        "@maven//:org_scala_lang_modules_scala_parser_combinators_%s" % scala_binary_suffix,
+    ],
     scala_compile_classpath = [
         "@maven//:org_scala_lang_scala_compiler",
         "@maven//:org_scala_lang_scala_library",
@@ -31,7 +35,10 @@ setup_scala_toolchain(
         "@maven//:org_scala_lang_scala_library",
         "@maven//:org_scala_lang_scala_reflect",
     ],
-    scalacopts = ["-Ywarn-unused"],
+    scala_xml_deps = [
+        "@maven//:org_scala_lang_modules_scala_xml_%s" % scala_binary_suffix,
+    ],
+    strict_deps_mode = "error",
     unused_dependency_checker_mode = "off",
     visibility = ["//visibility:public"],
 )
@@ -42,7 +49,7 @@ setup_scalafmt_toolchain(
     scalafmt_classpath = [
         "@maven//:%s_%s" % (dep, scala_binary_suffix)
         for dep in [
-            "com_geirsson_metaconfig_core",
+            "org_scalameta_metaconfig_core",
             "org_scalameta_parsers",
             "org_scalameta_scalafmt_core",
             "org_scalameta_scalafmt_sysops",
@@ -50,4 +57,23 @@ setup_scalafmt_toolchain(
         ]
     ],
     visibility = ["//visibility:public"],
+)
+
+setup_scala_testing_toolchain(
+    name = "testing_toolchain",
+    scala_version = scala_version,
+    scalatest_classpath = [
+        "@maven//:org_scalactic_scalactic_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_compatible",
+        "@maven//:org_scalatest_scalatest_core_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_featurespec_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_flatspec_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_freespec_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_funspec_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_funsuite_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_matchers_core_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_mustmatchers_%s" % scala_binary_suffix,
+        "@maven//:org_scalatest_scalatest_shouldmatchers_%s" % scala_binary_suffix,
+    ],
 )
