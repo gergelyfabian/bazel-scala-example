@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library", "java_test")
+
 scala_library(
     name = "example-lib",
     srcs = glob(["src/main/scala/**/*.scala"]),
